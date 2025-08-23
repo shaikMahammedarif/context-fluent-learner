@@ -24,6 +24,7 @@ const Chat = () => {
   const [youtubeInput, setYoutubeInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  const [uploadedContent, setUploadedContent] = useState([]);
   const { toast } = useToast();
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -69,6 +70,7 @@ const Chat = () => {
       setIsUploading(false);
       files.forEach(file => {
         addMessage('user', `📄 Uploaded: ${file.name}`);
+        setUploadedContent(prev => [...prev, { type: 'file', name: file.name }]);
         toast({
           title: "File uploaded successfully",
           description: `${file.name} has been processed and is ready for questions.`
@@ -85,6 +87,7 @@ const Chat = () => {
     
     setTimeout(() => {
       setIsUploading(false);
+      setUploadedContent(prev => [...prev, { type: 'url', name: urlInput }]);
       toast({
         title: "Website processed",
         description: "Content has been extracted and is ready for questions."
@@ -101,6 +104,7 @@ const Chat = () => {
     
     setTimeout(() => {
       setIsUploading(false);
+      setUploadedContent(prev => [...prev, { type: 'youtube', name: youtubeInput }]);
       toast({
         title: "YouTube video processed",
         description: "Transcript has been extracted and is ready for questions."
@@ -133,6 +137,7 @@ const Chat = () => {
 
   const newChat = () => {
     setMessages([]);
+    setUploadedContent([]);
     localStorage.removeItem('classmate-ai-messages');
     toast({
       title: "New chat started",
@@ -143,7 +148,8 @@ const Chat = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Panel - Uploads & Controls */}
-      <div className="w-full lg:w-1/3 flex flex-col border-r border-border">
+      {uploadedContent.length > 0 && (
+        <div className="w-full lg:w-1/3 flex flex-col border-r border-border">
         {/* Header */}
         <div className="p-6 border-b border-border bg-card">
           <div className="flex items-center justify-between mb-4">
@@ -263,10 +269,11 @@ const Chat = () => {
             </div>
           </Card>
         </div>
-      </div>
+        </div>
+      )}
       
       {/* Right Panel - Chat */}
-      <div className="w-full lg:w-2/3 flex flex-col">
+      <div className={`w-full ${uploadedContent.length > 0 ? 'lg:w-2/3' : ''} flex flex-col`}>
         {/* Chat Header */}
         <div className="p-6 border-b border-border bg-card">
           <div className="flex items-center gap-3">
