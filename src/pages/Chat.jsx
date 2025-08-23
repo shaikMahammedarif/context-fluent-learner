@@ -267,13 +267,13 @@ const Chat = () => {
 
           {/* Uploaded Content Display */}
           {uploadedContent.length > 0 && (
-            <div className="flex-1 p-6 pt-0 overflow-hidden">
-              <Card className="p-4 glass h-full flex flex-col">
+            <div className="flex-1 p-6 pt-0 overflow-hidden flex flex-col min-h-0">
+              <Card className="p-4 glass flex-1 flex flex-col min-h-0">
                 <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 flex-shrink-0">
                   <FileText className="h-4 w-4 text-primary" />
                   Uploaded Content ({uploadedContent.length})
                 </h3>
-                <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+                <div className="flex-1 overflow-y-auto space-y-2 pr-2 min-h-0">
                   {uploadedContent.map((item) => (
                     <div key={item.id} className="flex items-center gap-2 p-2 bg-background/50 rounded text-xs">
                       {item.type === 'file' && <FileText className="h-3 w-3 text-green-500" />}
