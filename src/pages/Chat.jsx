@@ -172,7 +172,7 @@ const Chat = () => {
         </div>
 
         {/* Upload Section */}
-        <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+        <div className="p-6 space-y-6">
           <Card className="p-6 glass">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Upload className="h-5 w-5 text-primary" />
@@ -273,7 +273,7 @@ const Chat = () => {
                   <FileText className="h-4 w-4 text-primary" />
                   Uploaded Content ({uploadedContent.length})
                 </h3>
-                <div className="space-y-2">
+                <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
                   {uploadedContent.map((item) => (
                     <div key={item.id} className="flex items-center gap-2 p-2 bg-background/50 rounded text-xs">
                       {item.type === 'file' && <FileText className="h-3 w-3 text-green-500" />}
