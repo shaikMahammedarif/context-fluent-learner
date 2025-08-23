@@ -69,8 +69,7 @@ const Chat = () => {
     setTimeout(() => {
       setIsUploading(false);
       files.forEach(file => {
-        addMessage('user', `📄 Uploaded: ${file.name}`);
-        setUploadedContent(prev => [...prev, { type: 'file', name: file.name }]);
+        setUploadedContent(prev => [...prev, { type: 'file', name: file.name, id: Date.now() + Math.random() }]);
         toast({
           title: "File uploaded successfully",
           description: `${file.name} has been processed and is ready for questions.`
@@ -83,11 +82,10 @@ const Chat = () => {
     if (!urlInput.trim()) return;
     
     setIsUploading(true);
-    addMessage('user', `🔗 Website: ${urlInput}`);
     
     setTimeout(() => {
       setIsUploading(false);
-      setUploadedContent(prev => [...prev, { type: 'url', name: urlInput }]);
+      setUploadedContent(prev => [...prev, { type: 'url', name: urlInput, id: Date.now() }]);
       toast({
         title: "Website processed",
         description: "Content has been extracted and is ready for questions."
@@ -100,11 +98,10 @@ const Chat = () => {
     if (!youtubeInput.trim()) return;
     
     setIsUploading(true);
-    addMessage('user', `📺 YouTube: ${youtubeInput}`);
     
     setTimeout(() => {
       setIsUploading(false);
-      setUploadedContent(prev => [...prev, { type: 'youtube', name: youtubeInput }]);
+      setUploadedContent(prev => [...prev, { type: 'youtube', name: youtubeInput, id: Date.now() }]);
       toast({
         title: "YouTube video processed",
         description: "Transcript has been extracted and is ready for questions."
@@ -148,8 +145,7 @@ const Chat = () => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Panel - Uploads & Controls */}
-      {uploadedContent.length > 0 && (
-        <div className="w-full lg:w-1/3 flex flex-col border-r border-border">
+      <div className="w-full lg:w-1/3 flex flex-col border-r border-border">
         {/* Header */}
         <div className="p-6 border-b border-border bg-card">
           <div className="flex items-center justify-between mb-4">
@@ -268,12 +264,33 @@ const Chat = () => {
               </div>
             </div>
           </Card>
+
+          {/* Uploaded Content Display */}
+          {uploadedContent.length > 0 && (
+            <div className="p-6 pt-0">
+              <Card className="p-4 glass">
+                <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-primary" />
+                  Uploaded Content ({uploadedContent.length})
+                </h3>
+                <div className="space-y-2">
+                  {uploadedContent.map((item) => (
+                    <div key={item.id} className="flex items-center gap-2 p-2 bg-background/50 rounded text-xs">
+                      {item.type === 'file' && <FileText className="h-3 w-3 text-green-500" />}
+                      {item.type === 'url' && <LinkIcon className="h-3 w-3 text-blue-500" />}
+                      {item.type === 'youtube' && <Youtube className="h-3 w-3 text-red-500" />}
+                      <span className="flex-1 truncate" title={item.name}>{item.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          )}
         </div>
-        </div>
-      )}
+      </div>
       
       {/* Right Panel - Chat */}
-      <div className={`w-full ${uploadedContent.length > 0 ? 'lg:w-2/3' : ''} flex flex-col`}>
+      <div className="w-full lg:w-2/3 flex flex-col">
         {/* Chat Header */}
         <div className="p-6 border-b border-border bg-card">
           <div className="flex items-center gap-3">
