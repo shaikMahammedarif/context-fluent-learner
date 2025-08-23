@@ -9,15 +9,22 @@ import { Upload, Globe, Youtube, Send, FileText, Brain, ArrowLeft } from "lucide
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
+interface Message {
+  id: string;
+  type: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [youtubeInput, setYoutubeInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
-  const fileInputRef = useRef(null);
-  const messagesEndRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   // Load messages from localStorage on component mount
@@ -25,7 +32,7 @@ const Chat = () => {
     const savedMessages = localStorage.getItem('classmate-ai-messages');
     if (savedMessages) {
       const parsed = JSON.parse(savedMessages);
-      setMessages(parsed.map((msg) => ({
+      setMessages(parsed.map((msg: any) => ({
         ...msg,
         timestamp: new Date(msg.timestamp)
       })));
@@ -44,7 +51,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleFileUpload = (files) => {
+  const handleFileUpload = (files: FileList | null) => {
     if (!files || files.length === 0) return;
     
     const file = files[0];
@@ -107,8 +114,8 @@ const Chat = () => {
     }, 4000);
   };
 
-  const addMessage = (type, content) => {
-    const newMessage = {
+  const addMessage = (type: 'user' | 'assistant', content: string) => {
+    const newMessage: Message = {
       id: Date.now().toString(),
       type,
       content,
