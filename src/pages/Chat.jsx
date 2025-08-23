@@ -143,7 +143,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="h-screen overflow-hidden bg-background flex">
       {/* Left Panel - Uploads & Controls */}
       <div className="w-full lg:w-1/3 flex flex-col border-r border-border h-screen">
         {/* Header */}
